@@ -25,7 +25,7 @@ _db = user_db
 # 사용자 전체 목록 확인
 def user_list(request):
     names = [{'id':key, 'name':value['이름']} for key, value in _db.items()]
-    return render(request, 'user_list.html', {'user_list':names})
+    return render(request, 'user_list.html', {'data':names})
 
 # 사용자 개개인 정보 확인
 def user_info(request, user_id):

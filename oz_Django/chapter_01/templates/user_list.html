@@ -48,7 +48,7 @@
 <body>
     <h1>사용자 목록</h1>
     <ul>
-        {%  for user in user_list %}
+        {%  for user in data %}
             <li><a href="{% url 'user_info' user.id %}">{{ user.name }}</a></li>
         {% endfor %}
     </ul>
