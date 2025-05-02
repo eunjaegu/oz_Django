@@ -1,5 +1,4 @@
 # todo > templates > todo_info.html
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,16 +41,24 @@
 <body>
     <div class="container">
         <h1>{{ data.title }}</h1>
-        <table>
-            {% for key, value in data.items %}
-                {% if key != 'title' %}
-                    <tr>
-                        <th>{{ key }}</th>
-                        <td>{{ value }}</td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-        </table>
+    <table>
+        <tr>
+            <th>Description</th>
+            <td>{{ data.description }}</td>
+        </tr>
+        <tr>
+            <th>Start Date</th>
+            <td>{{ data.start_date }}</td>
+        </tr>
+        <tr>
+            <th>End Date</th>
+            <td>{{ data.end_date }}</td>
+        </tr>
+        <tr>
+            <th>Is Completed</th>
+            <td>{{ data.is_completed }}</td>
+        </tr>
+    </table>
     </div>
 </body>
 </html>
