@@ -40,7 +40,7 @@ DJANGO_APPS = [
 ]
 
 OWN_APPS = [
-    'todoList',
+    'todo',
     'users',
 ]
 
@@ -78,7 +78,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -127,7 +126,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/todo/'
+LOGIN_REDIRECT_URL = '/accounts/login/'
 
 
 # Default primary key field type
