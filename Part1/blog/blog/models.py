@@ -2,11 +2,13 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 
+from utils.models import TimestampModel
+
 User = get_user_model()
 
 # 제목, 내용, 작성자, 작성일자, 수정일자, 카테코리, 썸네일이미지, 태그
 
-class Blog(models.Model):
+class Blog(TimestampModel):
     #카테고리 종류
     # CHICES로 생성 시 셀렉트 박스로 생성됨.
     CATEGORY_CHOICES = (
@@ -22,10 +24,6 @@ class Blog(models.Model):
     # models.CASCADE => 연쇄 삭제
     # models.PROTECT => 삭제 불가(유저 삭제 시 블로그가 있으면 유저 삭제 불가)
     # models.SET_NULL, null=True => 널값을 넣음 => 유저 삭제 시 블로그의 author가 null이 됨.
-
-
-    created_at = models.DateTimeField('작성일자', auto_now_add=True)
-    updated_at = models.DateTimeField('수정일자', auto_now=True)
 
     def __str__(self):
         # 카테고리 [free] 출력
@@ -54,8 +52,31 @@ class Blog(models.Model):
 # 작성일자
 # 수정일자
 # 카테고리
+# 작성자
 
-# 작성자 => 추후 업데이트
+# 댓글
+class Comment(TimestampModel):
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    content = models.CharField('본문', max_length=255)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    #관리자 페이지에서 어느 블로그 글에 달린 댓글인지 확인
+    def __str__(self):
+        return f'{self.blog.title} 댓글'
+
+    #관리자 페이지에서 모델 이름 한글로 설정
+    class Meta:
+        verbose_name = '댓글'
+        verbose_name_plural = '댓글 목록'
+        ordering = ('-created_at', '-id')
+
+
+# blog
+# 댓글 내용
+# 작성자
+# 수정일자
+# 작성일자
+
 
 
 

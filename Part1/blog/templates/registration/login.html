@@ -5,7 +5,10 @@
         {# 보안기능 => 클라이언트와 서버가 공유되고 있는 인증 값. #}
         {% csrf_token %}
         {{  form.as_p }}
-        <button>submit</button>
+        <button class="btn btn-primary">submit</button>
 
     </form>
+{% endblock %}
+{% block js %}
+    {% include 'form-js.html' %}
 {% endblock %}

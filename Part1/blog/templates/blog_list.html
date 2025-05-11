@@ -1,68 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1>블로그 목록 {{ count }}</h1>
+    <div class="mt-2">
+        <h1 class="d-inline">블로그 목록 {{ count }}</h1>
+        <a href="{% url 'blog:create' %}" class="float-end btn btn-sm btn-primary">새 글 작성</a>
+    </div>
 
-    <p style="text-align: right">
-        <a href="{% url 'blog:create' %}">새 글 작성</a>
-    </p>
-
+    <hr>
     {# settings.py의 MIDDLEWARE에 'django.contrib.auth.middleware.AuthenticationMiddleware'가 포함되어 있어 request.user 사용 가능 #}
 
     {% for blog in object_list %}
-       <p>
-           <a href="{%  url 'blog:detail' blog.pk %}">
-               [{{ blog.get_category_display }}] {{ blog.title }} <span>({{ blog.author.username }})</span> - <small>{{ blog.created_at | date:"Y-m-d"}}</small></a>
+       <div class="my-1" >
+           <a href="{% url 'blog:detail' blog.pk %}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+               [{{ blog.get_category_display }}] {{ blog.title }} <span>({{ blog.author.username }})</span> - <small>{{ blog.created_at | date:"Y-m-d" }}</small></a>
             {# <a href="/blog/{{ blog.pk }}/">{{ blog.title }} - <small>{{ blog.created_at | date:"Y-m-d"}}</small></a> #}
-       </p>
+       </div>
     {% endfor %}
 
-    <form method="get" style="margin-bottom: 10px;">
+    <form method="get" class="my-3 d-flex">
         {# name은 q변수, value는 서버에서 처리한 내용 출력 #}
-        <input name=q type="text" placeholder="검색어를 입력하세요." value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
-        <button>검색</button>
+        <input class="form-control-sm" name=q type="text" placeholder="검색어를 입력하세요." value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
+        <button class="btn btn-sm btn-info ms-2">검색</button>
     </form>
 
-    <div>
-        {# 이전 페이지가 존재할 경우에만 "첫번째" 및 "이전" 버튼을 출력합니다 #}
-        {% if page_obj.has_previous %}
-            <!-- 첫 번째 페이지로 이동 (검색어가 있을 경우에도 q 파라미터를 유지) -->
-            <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; 첫번째</a>
-             <!-- 이전 페이지로 이동 -->
-            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">이전</a>
-        {% endif %}
-
-        {# 현재 페이지 -2가 1보다 크면 ... 표시 (앞쪽 생략) #}
-        {% if page_obj.number|add:-2 > 1 %}
-             <!-- 앞 페이지를 생략하고 "..." 표시 -->
-            <a href="?page={{ page_obj.number|add:-3 }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&hellip;</a>
-        {% endif %}
-
-        {# <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span> #}
-        {# 페이지 번호 범위를 출력: 현재 페이지 기준 -2 ~ +2 범위만 보이도록 제한 #}
-        {% for i in page_obj.paginator.page_range %}
-            {% if page_obj.number == i %}
-                <!-- 현재 페이지 -->
-                <span>(현재페이지)</span>
-            {% elif i > page_obj.number|add:-3 and i < page_obj.number|add:3 %}
-                <!-- 현재 페이지 기준으로 -2 ~ +2 범위만 출력 -->
-                <a href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a>
-            {% endif %}
-        {% endfor %}
-
-        {# 현재 페이지 +2가 전체 페이지 수보다 작으면 ... 표시 (뒤쪽 생략) #}
-        {% if page_obj.paginator.num_pages > page_obj.number|add:2 %}
-            <!-- 뒤 페이지를 생략하고 "..." 표시 -->
-            <a href="?page={{ page_obj.number|add:3 }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&hellip;</a>
-        {% endif %}
-
-        {# 다음 페이지가 존재할 경우에만 "다음", "마지막" 버튼 출력 #}
-        {%  if page_obj.has_next %}
-            <!-- 다음 페이지로 이동 -->
-            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">다음</a>
-            <!-- 마지막 페이지로 이동 -->
-            <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">마지막 &raquo;</a>
-        {%  endif %}
-    </div>
+    {% include 'pagination.html' %}
 {% endblock %}
 
 <!--
