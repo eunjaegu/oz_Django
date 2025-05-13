@@ -8,6 +8,8 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from blog.forms import CommentForm
 from blog.models import Blog, Comment
 
+from blog.forms import BlogForm
+
 
 class BlogListView(ListView):
     #model = Blog
@@ -105,7 +107,8 @@ class BlogDetailView(ListView):
 class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
     template_name = 'blog_form.html'
-    fields = ('category', 'title', 'content') # 기본 폼은 html에서 {{ form.as_p }}
+    form_class = BlogForm
+    #fields = ('category', 'title', 'content') # 기본 폼은 html에서 {{ form.as_p }}
     # success_url = reverse_lazy('cb_blog_list') # 정적 페이지인 목록 페이지인 경우 사용
 
     def form_valid(self, form):
@@ -156,7 +159,8 @@ class BlogCreateView(LoginRequiredMixin, CreateView):
 class BlogUpdateView(LoginRequiredMixin, UpdateView):
     model = Blog
     template_name = 'blog_form.html'
-    fields = ('category', 'title', 'content')
+    #fields = ('category', 'title', 'content')
+    form_class = BlogForm
 
     # 방법1. 404 오류, 작성자 본인만 수정 가능
     def get_queryset(self):
@@ -166,6 +170,10 @@ class BlogUpdateView(LoginRequiredMixin, UpdateView):
         if self.request.user.is_superuser:
             return queryset
         return queryset.filter(author=self.request.user)
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
