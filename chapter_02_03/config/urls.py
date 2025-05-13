@@ -20,12 +20,14 @@ from todo import views
 from users import views as users_views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('todo/', views.todo_list, name='todo_list'),
-    path('todo/create/', views.todo_create, name='todo_create'),
-    path('todo/<int:pk>/', views.todo_info, name='todo_info'),
-    path('todo/<int:pk>/update/', views.todo_update, name='todo_update'),
-    path('todo/<int:pk>/delete/', views.todo_delete, name='todo_delete'),
-    path('admin/', admin.site.urls),
+
+    # CBV 연결
+    path('', include('todo.urls')),
+
+    # FBV 연결
+    path('fb/', include('todo.fbv_urls')),
+
+    # 인증 시스템
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/login/', users_views.login, name='users_login'),
     path('accounts/signup/', users_views.sign_up, name='users_signup'),

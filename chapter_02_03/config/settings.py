@@ -126,7 +126,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/accounts/login/'
+#LOGIN_REDIRECT_URL = '/fb/todo/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+# 브라우저 닫을 시 자동 로그아웃
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+#SESSION_COOKIE_AGE = 1
 
 
 # Default primary key field type

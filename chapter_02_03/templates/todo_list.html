@@ -114,7 +114,7 @@
     {% if request.user.is_authenticated %}
     <div style="display: flex; justify-content: space-between">
         <h1>{{ request.user.username }}'s Todo List</h1>
-        <button class="create-button" onclick="location.href='{% url 'todo_create' %}'">생성하기</button>
+        <button class="create-button" onclick="location.href='{% url 'todo:cbv_todo_create' %}'">생성하기</button>
     </div>
     <form method="GET" style="margin: 10px">
         <input type="text" placeholder="제목 또는 내용을 입력하세요." name="q" value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
@@ -122,7 +122,7 @@
     </form>
     <ul>
         {% for todo in page_obj.object_list %}
-            <li><a href="{% url 'todo_info' todo.id %}">{{ todo.title }}</a></li>
+            <li><a href="{% url 'todo:cbv_todo_info' todo.id %}">{{ todo.title }}</a></li>
         {% endfor %}
     </ul>
     <!-- 페이지네이션 -->
