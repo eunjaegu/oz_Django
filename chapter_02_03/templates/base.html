@@ -7,7 +7,7 @@
 <body>
     <nav style="display: flex; justify-content: space-between">
         <div>
-            <a style="font-size: 20px" href={% url 'todo_list' %}>Home</a>
+            <a style="font-size: 20px" href={% url 'fb:todo_list' %}>Home</a>
         </div>
         {% if request.user.is_authenticated %}
             <div style="text-align: right; font-size: 20px; display: flex; justify-content: space-between">
@@ -19,8 +19,8 @@
             </div>
         {% else %}
             <div style="display: flex; justify-content: right; font-size: 20px;">
-                <a href="{% url 'signup' %}" style="margin-right: 10px">SignUp</a>
-                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'users_signup' %}" style="margin-right: 10px">SignUp</a>
+                <a href="{% url 'users_login' %}">Login</a>
             </div>
         {% endif %}
     </nav>

@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from todo.forms import TodoForm, TodoUpdateForm
 
 # 전체 조회 및 페이지
-@login_required
+@login_required(login_url='/accounts/login/')
 def todo_list(request):
     todo_list = Todo.objects.filter(user=request.user).order_by('-created_at')
     q = request.GET.get('q')
@@ -41,7 +41,7 @@ def todo_create(request):
         todo = form.save(commit=False)
         todo.user = request.user
         todo.save()
-        return redirect(reverse('todo_info', kwargs={'pk':todo.pk}))
+        return redirect(reverse('fb:todo_info', kwargs={'pk':todo.pk}))
     context = {'form':form}
     return render(request, 'todo_create.html', context)
 
@@ -52,7 +52,7 @@ def todo_update(request, pk):
     form = TodoUpdateForm(request.POST or None, instance=todo)
     if form.is_valid():
         form.save()
-        return redirect(reverse('todo_info', kwargs={'pk':pk}))
+        return redirect(reverse('fb:todo_info', kwargs={'pk':pk}))
     context ={'form':form}
     return render(request, 'todo_create.html', context)
 
@@ -61,7 +61,7 @@ def todo_update(request, pk):
 def todo_delete(request, pk):
     todo = get_object_or_404(Todo, pk=pk, user=request.user)
     todo.delete()
-    return redirect(reverse('todo_list'))
+    return redirect(reverse('fb:todo_list'))
 
 
 
