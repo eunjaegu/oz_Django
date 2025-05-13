@@ -9,7 +9,7 @@
         margin: 0;
         padding: 20px;
     }
-    .container {
+    .custom-container {
         max-width: 600px;
         margin: auto;
         background: #fff;
@@ -21,67 +21,96 @@
         text-align: center;
         color: #333;
     }
-    table {
-        width: 100%;
-        border-collapse: collapse;
+    input[type='text'] {
+        height: 2vh;
     }
-    th, td {
+    .comment-list-item {
         padding: 10px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-    }
-    th {
-        background: #f0f0f0;
-    }
-    a {
-        text-decoration: none;
-        color: #333;
-    }
-    /* 버튼 스타일 */
-    .button-group {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        margin-top: 20px;
-        padding: 10px 20px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-
-    .button-group:hover {
-        background-color: #0056b3;
-    }
-
-    #delete-button {
-        background-color: #ff1122;
-    }
-    #delete-button:hover {
-        background-color: #cc1122;
+        margin: 5px 0;
+        background: #eaeaea;
+        border-radius: 5px;
+        transition: background 0.3s;
     }
 </style>
-<div class="container">
-    <div style="display: flex; justify-content: space-between">
+<div class="mt-lg-5 custom-container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
         <h1>{{ todo.title }}</h1>
-        <div>
-            <button class="button-group" onclick="location.href='{% url 'todo:cbv_todo_update' todo.id %}'">수정하기</button>
-                    <form method="POST" action="{% url 'todo:cbv_todo_delete' todo.id %}">
-            {% csrf_token %}
-            <button id="delete-button" type="submit" class="button-group">삭제하기</button>
-        </form>
+        <div class="d-flex">
+            <button class="btn btn-primary me-2" onclick="location.href='{% url 'todo:cbv_todo_update' todo.id %}'">수정하기</button>
+            <form method="POST" action="{% url 'todo:cbv_todo_delete' todo.id %}">
+                {% csrf_token %}
+                <button id="delete-button" type="submit" class="btn btn-danger">삭제하기</button>
+            </form>
         </div>
     </div>
-    <table>
+    <table class="table">
         {% for key, value in todo.items %}
 		        <!-- todo.__dict__ 에서 사용하지 않을 값들은 if 조건절로 배제해줍니다. -->
             {% if key|not_in:"id,user_id,_state" %}
                 <tr>
-                    <th>{{ key|get_verbose_name:"todo.Todo" }}</th>
+                    <th class="bg-light">{{ key|get_verbose_name:"todo.Todo" }}</th>
                     <td>{{ value }}</td>
                 </tr>
             {% endif %}
         {% endfor %}
     </table>
 </div>
+<div class="custom-container mt-lg-2">
+    <h2>Comment</h2>
+    <hr>
+    <form method="POST" action="{% url 'todo:comment_create' todo.id %}" class="d-flex justify-content-evenly align-items-center">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button class="btn btn-primary">댓글달기</button>
+    </form>
+    <ul class="list-unstyled" id="comment_wrapper">
+    {% for comment in page_obj %}
+<li class="comment-list-item container-fluid">
+
+    <div class="ps-2 d-flex justify-content-between align-items-center">
+        <p class="mb-0">{{ comment.user }}</p>
+        {% if request.user == comment.user or request.user.is_staff %}
+        <div>
+            <button type="button" class="btn btn-primary btn-sm" onclick="toggleEdit({{ comment.id }})">수정</button>
+            <form method="POST" action="{% url 'todo:comment_delete' comment.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- 댓글 표시 영역 -->
+    <div id="comment_display_{{ comment.id }}">
+        <p>{{ comment.message }}</p>
+        <p class="text-end">{{ comment.created_at }}</p>
+    </div>
+
+    <!-- 댓글 수정 영역 -->
+    <form id="comment_edit_form_{{ comment.id }}" method="POST" action="{% url 'todo:comment_update' comment.id %}" style="display: none;">
+        {% csrf_token %}
+        <textarea name="message" class="form-control mb-2" rows="2">{{ comment.message }}</textarea>
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary btn-sm me-2">저장</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="cancelEdit({{ comment.id }})">취소</button>
+        </div>
+    </form>
+
+</li>
+{% endfor %}
+    </ul>
+    {% include 'pagination.html' with fragment='comment_wrapper' %}
+</div>
+<script>
+function toggleEdit(commentId) {
+    document.getElementById(`comment_display_${commentId}`).style.display = "none";
+    document.getElementById(`comment_edit_form_${commentId}`).style.display = "block";
+}
+
+function cancelEdit(commentId) {
+    document.getElementById(`comment_display_${commentId}`).style.display = "block";
+    document.getElementById(`comment_edit_form_${commentId}`).style.display = "none";
+}
+</script>
 {% endblock %}
 
