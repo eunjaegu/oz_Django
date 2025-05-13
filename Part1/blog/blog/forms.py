@@ -1,13 +1,18 @@
 from django import forms
 
 from blog.models import Blog, Comment
+from django_summernote.widgets import SummernoteWidget
 
 
 class BlogForm(forms.ModelForm):
     class Meta:
         model = Blog
-        fields = ('title', 'content')
+        fields = ('category', 'title', 'image', 'content', )
+        widgets ={
+            'content':SummernoteWidget()
+        }
             #'__all__'
+
 
 
 class CommentForm(forms.ModelForm):

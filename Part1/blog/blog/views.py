@@ -90,14 +90,21 @@ def blog_create(request):
 
 @login_required()
 def blog_update(request, pk):
+    if request.user.is_superuser:
+        blog= get_object_or_404(Blog, pk=pk)
+    else:
+        blog = get_object_or_404(Blog, pk=pk, author=request.user)
+
     # pk와 작성자(author)가 현재 로그인한 사용자(request.user)인 Blog 객체를 조회
     # 조건에 맞는 객체가 없으면 404 에러 발생
-    blog = get_object_or_404(Blog, pk=pk, author=request.user)
+    #blog = get_object_or_404(Blog, pk=pk, author=request.user)
 
     # BlogForm에 요청된 데이터(request.POST)를 넣고,
     # instance=blog로 기존 데이터를 불러와 폼을 채운다 (GET이면 기존 내용 표시, POST면 수정 데이터 반영)
-    form = BlogForm(request.POST or None, instance=blog)
+    form = BlogForm(request.POST or None, request.FILES or None, instance=blog)
+    print(request.POST)
     if form.is_valid():
+        print(form.cleaned_data, request.FILES)
         blog.save()
         return redirect(reverse('fb:detail', kwargs={'pk': blog.pk}))
 
