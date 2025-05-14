@@ -53,7 +53,7 @@ class TodoDetailView(LoginRequiredMixin, DetailView):
 class TodoCreateView(LoginRequiredMixin, CreateView):
     model = Todo
     template_name = 'todo_create.html'
-    from_class = TodoForm
+    form_class = TodoForm
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -71,8 +71,8 @@ class TodoUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        if obj.user != self.request.user:
-            raise Http404
+        if obj.user != self.request.user and not self.request.user.is_superuser:
+            raise Http404("해당 To Do를 수정할 권한이 없습니다.")
         return obj
 
     def get_success_url(self):
