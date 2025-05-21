@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>User</h1>
+    {% include 'include/search_form.html' %}
+    <div>
+        {% for user in object_list %}
+            <a href="{% url 'profile:detail' user.nickname %}" class="text-decoration-none text-black">
+                <div class="my-4">
+                    <span class="p-2 border rounded-circle me-2">
+                        <i class="fa-solid fa-user" style="width: 16px; padding-left: 3px;"></i>
+                    </span>
+                {{ user.nickname }}
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}

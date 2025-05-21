@@ -1,0 +1,18 @@
+
+
+textarea.form-control {
+    resize: none;
+}
+
+.add-comment:hover {
+    background-color: black !important;
+}
+
+.add-comment:hover i {
+    color: white !important;
+}
+
+.text-block {
+  color: black !important;
+  text-decoration: none !important;
+}
