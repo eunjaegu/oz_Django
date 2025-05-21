@@ -1,3 +1,2 @@
-.idea/*
-.config_secret/*
-.config_secret
+.idea/
+.config_secret/
